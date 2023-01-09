@@ -613,7 +613,7 @@ const struct exynos_panel_desc samsung_s6e3fc3_6a = {
 	.dft_brightness = 1023,
 	.brt_capability = &s6e3fc3_6a_brightness_capability,
 	/* supported HDR format bitmask : 1(DOLBY_VISION), 2(HDR10), 3(HLG) */
-	.hdr_formats = BIT(2) | BIT(3),
+	.hdr_formats = BIT(1) | BIT(2) | BIT(3),
 	.max_luminance = 8000000,
 	.max_avg_luminance = 1200000,
 	.min_luminance = 5,
