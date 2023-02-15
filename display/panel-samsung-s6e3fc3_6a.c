@@ -577,7 +577,7 @@ const struct brightness_capability s6e3fc3_6a_brightness_capability = {
 	.normal = {
 		.nits = {
 			.min = 2,
-			.max = 500,
+			.max = 800,
 		},
 		.level = {
 			.min = 4,
@@ -590,8 +590,8 @@ const struct brightness_capability s6e3fc3_6a_brightness_capability = {
 	},
 	.hbm = {
 		.nits = {
-			.min = 550,
-			.max = 800,
+			.min = 850,
+			.max = 1200,
 		},
 		.level = {
 			.min = 2389,
@@ -614,7 +614,7 @@ const struct exynos_panel_desc samsung_s6e3fc3_6a = {
 	.brt_capability = &s6e3fc3_6a_brightness_capability,
 	/* supported HDR format bitmask : 1(DOLBY_VISION), 2(HDR10), 3(HLG) */
 	.hdr_formats = BIT(1) | BIT(2) | BIT(3),
-	.max_luminance = 8000000,
+	.max_luminance = 12000000,
 	.max_avg_luminance = 1200000,
 	.min_luminance = 5,
 	.bl_range = s6e3fc3_6a_bl_range,
