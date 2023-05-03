@@ -403,10 +403,6 @@ static void s6e3fc3_6a_set_dimming_on(struct exynos_panel *exynos_panel,
 static void s6e3fc3_6a_set_local_hbm_mode(struct exynos_panel *exynos_panel,
 				 bool local_hbm_en)
 {
-	if (exynos_panel->hbm.local_hbm.enabled == local_hbm_en)
-		return;
-
-	exynos_panel->hbm.local_hbm.enabled = local_hbm_en;
 	s6e3fc3_6a_update_wrctrld(exynos_panel);
 }
 
@@ -482,8 +478,8 @@ static const u32 s6e3fc3_6a_bl_range[] = {
 
 static const struct exynos_panel_mode s6e3fc3_6a_modes[] = {
 	{
-		/* 1080x2400 @ 60Hz */
 		.mode = {
+			.name = "1080x2400x60",
 			.clock = 168498,
 			.hdisplay = 1080,
 			.hsync_start = 1080 + 32, // add hfp
@@ -518,7 +514,6 @@ static const struct exynos_panel_mode s6e3fc3_6a_modes[] = {
 
 static const struct exynos_panel_mode s6e3fc3_6a_lp_mode = {
 	.mode = {
-		/* 1080x2400 @ 30Hz */
 		.name = "1080x2400x30",
 		.clock = 84249,
 		.hdisplay = 1080,
@@ -626,6 +621,7 @@ const struct exynos_panel_desc samsung_s6e3fc3_6a = {
 	.lp_cmd_set = &s6e3fc3_6a_lp_cmd_set,
 	.binned_lp = s6e3fc3_6a_binned_lp,
 	.num_binned_lp = ARRAY_SIZE(s6e3fc3_6a_binned_lp),
+	.no_lhbm_rr_constraints = true,
 	.panel_func = &s6e3fc3_6a_drm_funcs,
 	.exynos_panel_func = &s6e3fc3_6a_exynos_funcs,
 };
