@@ -143,6 +143,7 @@ static void s6e3fc3_6a_update_te2(struct exynos_panel *ctx)
 		{0xCB, 0x00, 0x0C, 0x32}, // HS 60Hz
 	};
 	u8 lp_setting[4] = {0xCB, 0x00, 0x00, 0x49}; // lp low/high
+	int i;
 
 	if (!ctx)
 		return;
@@ -151,7 +152,7 @@ static void s6e3fc3_6a_update_te2(struct exynos_panel *ctx)
 	for (i = 0; i < 2; i++) {
 		timing.rising_edge = ctx->te2.mode_data[i].timing.rising_edge;
 		timing.falling_edge = ctx->te2.mode_data[i].timing.falling_edge;
-		s6e3fc5_get_te2_setting(&timing, &setting[i][1]);
+		s6e3fc3_6a_get_te2_setting(&timing, &setting[i][1]);
 		dev_dbg(ctx->dev, "TE2 updated HS %dHz: 0xcb 0x%x 0x%x 0x%x\n",
 			(i == 0) ? 90 : 60,
 			setting[i][1], setting[i][2], setting[i][3]);
@@ -217,30 +218,6 @@ static void s6e3fc5_change_frequency(struct exynos_panel *ctx,
 	EXYNOS_DCS_WRITE_TABLE(ctx, FQ_update);
 	EXYNOS_DCS_WRITE_TABLE(ctx, test_key_off_f0);
 	dev_dbg(ctx->dev, "%s: change to %uhz\n", __func__, vrefresh);
-}
-static int s6e3fc5_set_op_hz(struct exynos_panel *ctx, unsigned int hz)
-{
-	const unsigned int vrefresh = drm_mode_vrefresh(&ctx->current_mode->mode);
-	if ((vrefresh > hz) || ((hz != 60) && (hz != 90))) {
-		dev_err(ctx->dev, "invalid op_hz=%u for vrefresh=%u\n",
-			hz, vrefresh);
-		return -EINVAL;
-	}
-	ctx->op_hz = hz;
-	if (ctx->op_hz == 60) {
-		exynos_panel_send_cmd_set(ctx,
-			&s6e3fc5_mode_ns_60_cmd_set);
-	} else {
-		if (vrefresh == 60) {
-			exynos_panel_send_cmd_set(ctx,
-				&s6e3fc5_mode_hs_60_cmd_set);
-		} else {
-			exynos_panel_send_cmd_set(ctx,
-				&s6e3fc5_mode_hs_90_cmd_set);
-		}
-	}
-	dev_info(ctx->dev, "set op_hz at %u\n", hz);
-	return 0;
 }
 
 static void s6e3fc3_6a_update_te2_stub(struct exynos_panel *ctx)
