@@ -264,7 +264,9 @@ static void s6e3fc3_6a_update_wrctrld(struct exynos_panel *ctx)
 static void s6e3fc3_6a_set_nolp_mode(struct exynos_panel *ctx,
 				  const struct exynos_panel_mode *pmode)
 {
-	u32 delay_us = mult_frac(1000, 1020, 60);	/* 60 Hz */
+
+	unsigned int vrefresh = drm_mode_vrefresh(&pmode->mode);
+	u32 delay_us = mult_frac(1000, 1020, vrefresh);
 
 	if (!ctx->enabled)
 		return;
@@ -364,6 +366,7 @@ static int s6e3fc3_6a_enable(struct drm_panel *panel)
 {
 	struct exynos_panel *ctx = container_of(panel, struct exynos_panel, panel);
 	const struct exynos_panel_mode *pmode = ctx->current_mode;
+	const struct drm_display_mode *mode;
 
 	if (!pmode) {
 		dev_err(ctx->dev, "no current mode set\n");
