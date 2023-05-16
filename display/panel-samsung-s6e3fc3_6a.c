@@ -76,8 +76,8 @@ static const struct exynos_dsi_cmd s6e3fc3_6a_lp_high_cmds[] = {
 static const struct exynos_binned_lp s6e3fc3_6a_binned_lp[] = {
 	BINNED_LP_MODE("off", 0, s6e3fc3_6a_lp_off_cmds),
 	/* rising time = delay = 0, falling time = delay + width = 0 + 73 */
-	BINNED_LP_MODE_TIMING("low", 80, s6e3fc3_6a_lp_low_cmds, 0, 0 + 73),
-	BINNED_LP_MODE_TIMING("high", 2047, s6e3fc3_6a_lp_high_cmds, 0, 0 + 73)
+	BINNED_LP_MODE_TIMING("low", 80, s6e3fc3_6a_lp_low_cmds, 0, 0 + 16),
+	BINNED_LP_MODE_TIMING("high", 2047, s6e3fc3_6a_lp_high_cmds, 0, 0 + 16)
 };
 
 static const struct exynos_dsi_cmd s6e3fc3_6a_init_cmds[] = {
@@ -88,6 +88,10 @@ static const struct exynos_dsi_cmd s6e3fc3_6a_init_cmds[] = {
 
 	EXYNOS_DSI_CMD0(test_key_on_f0),
 
+	/* TE rising time */
+	EXYNOS_DSI_CMD_SEQ_REV(PANEL_REV_LT(PANEL_REV_EVT1),
+			       0xB9, 0x01, 0x09, 0x5C, 0x00, 0x0B),
+
 	/* FQ CON setting */
 	EXYNOS_DSI_CMD_SEQ(0xB0, 0x27, 0xF2),
 	EXYNOS_DSI_CMD_SEQ(0xF2, 0x80),
@@ -96,6 +100,10 @@ static const struct exynos_dsi_cmd s6e3fc3_6a_init_cmds[] = {
 	/* IRC setting */
 	EXYNOS_DSI_CMD_SEQ(0xB0, 0x03, 0x8F),
 	EXYNOS_DSI_CMD_SEQ(0x8F, 0x25),
+
+	/* Enable FD in display PMIC for ELVDD and ELVSS */
+	EXYNOS_DSI_CMD_SEQ_REV(PANEL_REV_LT(PANEL_REV_EVT1), 0xB0, 0x0B, 0xF4),
+	EXYNOS_DSI_CMD_SEQ_REV(PANEL_REV_LT(PANEL_REV_EVT1), 0xF4, 0x1C),
 
 	/* Local HBM circle location setting */
 	EXYNOS_DSI_CMD0(test_key_on_f1),
@@ -573,8 +581,8 @@ static const struct exynos_panel_mode s6e3fc3_6a_modes[] = {
 			.vsync_end = 2400 + 12 + 4, // add vsa
 			.vtotal = 2400 + 12 + 4 + 26, // add vbp
 			.flags = 0,
-			.width_mm = 70,
-			.height_mm = 149,
+			.width_mm = 64,
+			.height_mm = 142,
 		},
 		.exynos_mode = {
 			.mode_flags = MIPI_DSI_CLOCK_NON_CONTINUOUS,
@@ -590,8 +598,8 @@ static const struct exynos_panel_mode s6e3fc3_6a_modes[] = {
 			.underrun_param = &underrun_param,
 		},
 		.te2_timing = {
-			.rising_edge = 12,
-			.falling_edge = 12 + 50,
+			.rising_edge = 0,
+			.falling_edge = 0 + 66,
 		},
 	},
 };
