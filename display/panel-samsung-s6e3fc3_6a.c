@@ -358,7 +358,7 @@ static int s6e3fc3_6a_lhbm_gamma_read(struct exynos_panel *ctx)
 	EXYNOS_DCS_WRITE_SEQ(ctx, 0xB0, 0x00, 0x28, 0xF2); /* global para*/
 	EXYNOS_DCS_WRITE_SEQ(ctx, 0xF2, 0xC4); /* 8 bit */
 	EXYNOS_DCS_WRITE_TABLE(ctx, test_key_off_f0);
-	s6e3fc3_6a_update_lhbm_gamma(ctx);
+	//s6e3fc3_6a_update_lhbm_gamma(ctx);
 	return ret;
 }
 
