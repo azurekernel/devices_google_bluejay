@@ -137,8 +137,8 @@ static void s6e3fc3_6a_get_te2_setting(struct exynos_panel_te2_timing *timing,
 	width_low_byte = (falling - rising) & 0xFF;
 	width_high_byte = ((falling - rising) >> 8) & 0xF;
 
-	setting[0] = (delay_high_byte >> 4) | (delay_low_byte >> 4);
-	setting[1] = ((delay_low_byte & 0xF) << 4) | (width_high_byte);
+	setting[0] = (delay_high_byte << 4) | width_high_byte;	
+	setting[1] = delay_low_byte;	
 	setting[2] = width_low_byte;
 }
 
