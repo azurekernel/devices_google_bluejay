@@ -14,7 +14,7 @@
 #include <linux/of_platform.h>
 #include <video/mipi_display.h>
 
-#include "panel-samsung-drv.h"
+#include "samsung/panel/panel-samsung-drv.h"
 
 static const unsigned char PPS_SETTING[] = {
 	0x11, 0x00, 0x00, 0x89, 0x30, 0x80, 0x09, 0x60,
@@ -148,7 +148,7 @@ static const struct exynos_dsi_cmd s6e3fc3_init_cmds[] = {
 	EXYNOS_DSI_CMD_SEQ(0xB0, 0x28, 0xF2),
 	EXYNOS_DSI_CMD_SEQ(0xF2, 0xCC),
 	EXYNOS_DSI_CMD_SEQ(0xB0, 0x01, 0x34, 0x68),
-	EXYNOS_DSI_CMD_SEQ(0x68, 0x21, 0xC6, 0xE9),
+	EXYNOS_DSI_CMD_SEQ(0x68, 0x21, 0xC6, 0xB3),
 	EXYNOS_DSI_CMD_SEQ(0xB0, 0x00, 0x28, 0xF2),
 	EXYNOS_DSI_CMD_SEQ(0xF2, 0xC4),
 	EXYNOS_DSI_CMD0(test_key_off_f1),
@@ -430,12 +430,18 @@ static void s6e3fc3_set_dimming_on(struct exynos_panel *exynos_panel,
 static void s6e3fc3_set_local_hbm_mode(struct exynos_panel *exynos_panel,
 				 bool local_hbm_en)
 {
+	if (exynos_panel->hbm.local_hbm.enabled == local_hbm_en)
+		return;
+
+	exynos_panel->hbm.local_hbm.enabled = local_hbm_en;
 	s6e3fc3_update_wrctrld(exynos_panel);
 }
 
 static void s6e3fc3_mode_set(struct exynos_panel *ctx,
 			     const struct exynos_panel_mode *pmode)
 {
+	if (!ctx->enabled)
+		return;
 	s6e3fc3_change_frequency(ctx, drm_mode_vrefresh(&pmode->mode));
 }
 
@@ -490,8 +496,8 @@ static const struct exynos_panel_mode s6e3fc3_modes[] = {
 			.vsync_end = 2400 + 12 + 4, // add vsa
 			.vtotal = 2400 + 12 + 4 + 26, // add vbp
 			.flags = 0,
-			.width_mm = 67,
-			.height_mm = 148,
+			.width_mm = 64,
+			.height_mm = 142,
 		},
 		.exynos_mode = {
 			.mode_flags = MIPI_DSI_CLOCK_NON_CONTINUOUS,
@@ -508,7 +514,7 @@ static const struct exynos_panel_mode s6e3fc3_modes[] = {
 		},
 		.te2_timing = {
 			.rising_edge = 0,
-			.falling_edge = 0 + 48,
+			.falling_edge = 0 + 66,
 		},
 	},
 	{
@@ -524,8 +530,8 @@ static const struct exynos_panel_mode s6e3fc3_modes[] = {
 			.vsync_end = 2400 + 12 + 4, // add vsa
 			.vtotal = 2400 + 12 + 4 + 26, // add vbp
 			.flags = 0,
-			.width_mm = 67,
-			.height_mm = 148,
+			.width_mm = 64,
+			.height_mm = 142,
 		},
 		.exynos_mode = {
 			.mode_flags = MIPI_DSI_CLOCK_NON_CONTINUOUS,
@@ -542,7 +548,7 @@ static const struct exynos_panel_mode s6e3fc3_modes[] = {
 		},
 		.te2_timing = {
 			.rising_edge = 0,
-			.falling_edge = 0 + 48,
+			.falling_edge = 0 + 66,
 		},
 	},
 };
@@ -561,8 +567,8 @@ static const struct exynos_panel_mode s6e3fc3_lp_mode = {
 		.vtotal = 2400 + 12 + 4 + 26, // add vbp
 		.flags = 0,
 		.type = DRM_MODE_TYPE_DRIVER,
-		.width_mm = 67,
-		.height_mm = 148,
+		.width_mm = 64,
+		.height_mm = 142,
 	},
 	.exynos_mode = {
 		.mode_flags = MIPI_DSI_CLOCK_NON_CONTINUOUS,
@@ -662,7 +668,7 @@ const struct exynos_panel_desc samsung_s6e3fc3 = {
 };
 
 static const struct of_device_id exynos_panel_of_match[] = {
-	{ .compatible = "samsung,s6e3fc3", .data = &samsung_s6e3fc3 },
+	{ .compatible = "samsung,s6e3fc3_6a", .data = &samsung_s6e3fc3 },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, exynos_panel_of_match);
@@ -671,7 +677,7 @@ static struct mipi_dsi_driver exynos_panel_driver = {
 	.probe = exynos_panel_probe,
 	.remove = exynos_panel_remove,
 	.driver = {
-		.name = "panel-samsung-s6e3fc3",
+		.name = "panel-samsung-s6e3fc3_6a",
 		.of_match_table = exynos_panel_of_match,
 	},
 };
